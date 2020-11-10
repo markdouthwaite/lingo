@@ -6,7 +6,7 @@ A package for quickly deploying Scikit-Learn Linear Models as Go applications.
 package main 
 
 import (
-    "lingo"
+    "github.com/markdouthwaite/lingo"
     "github.com/gorilla/mux"
 	"net/http" 
     "time"
@@ -15,7 +15,7 @@ import (
 
 func main(){
     model := lingo.Load("artifacts/model.h5")
-    app := lingo.HTTPModelApplication(model)
+    app := lingo.HTTPModelApplication{model}
     router := mux.NewRouter()
     router.HandleFunc("/predict", app.Predict)
     router.HandleFunc("/health", app.Health)

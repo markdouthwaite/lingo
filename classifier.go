@@ -5,30 +5,30 @@ import (
 )
 
 // Create a new Linear Regression model
-func NewClassifier(coeffs []float64, intercept []float64, nVars int) *Classifier {
+func NewClassifier(theta []float64, intercept []float64, nVars int) *Classifier {
 	vecIntercept := mat.NewVecDense(nVars, intercept)
-	newCoeffs := mat.NewDense(nVars, len(coeffs)/nVars, coeffs)
+	newTheta := mat.NewDense(nVars, len(theta)/nVars, theta)
 
-	return &Classifier{newCoeffs, vecIntercept}
+	return &Classifier{newTheta, vecIntercept}
 }
 
 // Linear regression model struct
 type Classifier struct {
-	coeffs    *mat.Dense
+	theta     *mat.Dense
 	intercept *mat.VecDense
 }
 
 // Predict the probability of classes for a single observation
 func (m *Classifier) PredictProba(x []float64) []float64 {
 	vx := mat.NewDense(1, len(x), x)
-	H := DecisionFunction(vx, m.coeffs, m.intercept)
+	H := DecisionFunction(vx, m.theta, m.intercept)
 	return VecToArrayFloat64(Softmax(H).RowView(0))
 }
 
 // Predict the class for a single observation
 func (m *Classifier) PredictClass(x []float64) []int {
 	vx := mat.NewDense(1, len(x), x)
-	H := DecisionFunction(vx, m.coeffs, m.intercept)
+	H := DecisionFunction(vx, m.theta, m.intercept)
 	c, _ := Argmax(H.RowView(0))
 	h := []int{c}
 	return h
@@ -37,8 +37,8 @@ func (m *Classifier) PredictClass(x []float64) []int {
 // Predict the probability of classes for a single observation
 func (m *Classifier) Predict(x []float64) []float64 {
 	vx := mat.NewDense(1, len(x), x)
-	H := DecisionFunction(vx, m.coeffs, m.intercept)
-	n, _ := m.coeffs.Dims()
+	H := DecisionFunction(vx, m.theta, m.intercept)
+	n, _ := m.theta.Dims()
 	c, _ := Argmax(H.RowView(0))
 	h := make([]float64, n)
 	h[c] = 1.0

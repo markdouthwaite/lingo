@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func boston_x() [][]float64 {
+func bostonX() [][]float64 {
 	return [][]float64{
 		{5.0, 296.0, 16.6, 395.5, 9.04},
 		{4.0, 254.0, 17.6, 396.9, 3.53},
@@ -20,7 +20,7 @@ func boston_x() [][]float64 {
 	}
 }
 
-func boston_h() []float64 {
+func bostonH() []float64 {
 	return []float64{
 		28.083266491089258, 31.451203791590125,
 		10.08596698683239, 27.0644431779563,
@@ -31,13 +31,13 @@ func boston_h() []float64 {
 }
 
 func setupSimpleRegressor() *Regressor {
-	coeffs := []float64{0.3574458, -0.01453134, -1.2603342, 0.00891642, -0.79181815}
+	theta := []float64{0.3574458, -0.01453134, -1.2603342, 0.00891642, -0.79181815}
 	intercept := []float64{55.15045304131303}
-	return NewRegressor(coeffs, intercept, 1)
+	return NewRegressor(theta, intercept, 1)
 }
 
 func setupMinimalMultivariateRegressor() *Regressor {
-	coeffs := []float64{
+	theta := []float64{
 		0.3574458, -0.01453134,
 		-1.2603342, 0.00891642,
 		-0.79181815, 0.3574458,
@@ -45,12 +45,12 @@ func setupMinimalMultivariateRegressor() *Regressor {
 		0.00891642, -0.79181815,
 	}
 	intercept := []float64{55.15045304131303, 55.15045304131303}
-	return NewRegressor(coeffs, intercept, 2)
+	return NewRegressor(theta, intercept, 2)
 }
 
 func TestSimpleRegressor_Predict(t *testing.T) {
-	x := boston_x()
-	h := boston_h()
+	x := bostonX()
+	h := bostonH()
 	model := setupSimpleRegressor()
 	for i := 0; i < len(h); i++ {
 		o := model.Predict(x[i])

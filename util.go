@@ -2,6 +2,7 @@ package lingo
 
 import (
 	"gonum.org/v1/gonum/mat"
+	"gonum.org/v1/hdf5"
 	"math"
 )
 
@@ -38,11 +39,90 @@ func Argmax(a mat.Vector) (int, int) {
 	return maxI, maxJ
 }
 
-func Load(filename string) LinearModel {
-	model := Regressor{nil, nil}
-	return &model
+func loadParams(dataset *hdf5.Dataset) ([]float64, int, int) {
+	rows, cols := 0, 0
+	rowsAttr, err := dataset.OpenAttribute("n")
+
+	if err != nil {
+		panic("Failed to open attribute 'n'.")
+	}
+
+	colsAttr, err := dataset.OpenAttribute("m")
+
+	if err != nil {
+		panic("Failed to open attribute 'n'.")
+	}
+
+	err = colsAttr.Read(&rows, hdf5.T_NATIVE_UINT32)
+
+	if err != nil {
+		panic("Failed to read 'rows'.")
+	}
+
+	err = rowsAttr.Read(&cols, hdf5.T_NATIVE_UINT32)
+
+	if err != nil {
+		panic("Failed to read 'cols'.")
+	}
+
+	params := make([]float64, rows*cols)
+
+	err = dataset.Read(&params)
+
+	return params, rows, cols
 }
 
-func Dump(filename string, model *LinearModel) {
+func Load(fileName string) LinearModel {
 
+	var modelType string
+
+	file, err := hdf5.OpenFile(fileName, hdf5.F_ACC_RDONLY)
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	modelGroup, err := file.OpenGroup("model")
+
+	if err != nil {
+		panic("Failed to open group 'model'.")
+	}
+
+	modelTypeAttr, err := modelGroup.OpenAttribute("estimatorType")
+
+	if err != nil {
+		panic("Failed to open attribute 'estimatorType'")
+	}
+
+	modelTypeAttr.Read(&modelType, hdf5.T_GO_STRING)
+
+	thetaDataset, err := modelGroup.OpenDataset("theta")
+
+	defer thetaDataset.Close()
+
+	if err != nil {
+		panic("Failed to open dataset 'theta'.")
+	}
+
+	interceptDataset, err := modelGroup.OpenDataset("intercept")
+
+	defer interceptDataset.Close()
+
+	if err != nil {
+		panic("Failed to open dataset 'theta'.")
+	}
+
+	theta, _, nVars := loadParams(thetaDataset)
+	intercept, _, _ := loadParams(interceptDataset)
+
+	if modelType == "regressor" {
+		model := NewRegressor(theta, intercept, nVars)
+		return model
+	} else if modelType == "classifier" {
+		model := NewClassifier(theta, intercept, nVars)
+		return model
+	} else {
+		panic("Failed to initialise new model of type " + modelType)
+	}
 }

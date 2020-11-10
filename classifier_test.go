@@ -24,7 +24,7 @@ func irisY() []int {
 }
 
 func setupSimpleClassifier() *Classifier {
-	coeffs := []float64{
+	theta := []float64{
 		3.9351191150167972, 9.17888350905748,
 		-12.377689096030275, -5.930220522464995,
 		-0.7352742652265126, -1.2526120340565905,
@@ -33,7 +33,7 @@ func setupSimpleClassifier() *Classifier {
 		10.899661932611561, 12.098504529808563,
 	}
 	intercept := []float64{2.15291448, 20.21934658, -22.37226107}
-	return NewClassifier(coeffs, intercept, 3)
+	return NewClassifier(theta, intercept, 3)
 }
 
 func TestSimpleClassifier_Predict(t *testing.T) {

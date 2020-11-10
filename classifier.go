@@ -5,7 +5,7 @@ import (
 )
 
 // Create a new Linear Regression model
-func CreateClassifier(coeffs []float64, intercept []float64, nVars int) *Classifier {
+func NewClassifier(coeffs []float64, intercept []float64, nVars int) *Classifier {
 	vecIntercept := mat.NewVecDense(nVars, intercept)
 	newCoeffs := mat.NewDense(nVars, len(coeffs)/nVars, coeffs)
 

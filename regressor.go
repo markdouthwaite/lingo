@@ -5,7 +5,7 @@ import (
 )
 
 // Create a new Linear Regression model
-func CreateRegression(coeffs []float64, intercept []float64, nVars int) *Regressor {
+func NewRegressor(coeffs []float64, intercept []float64, nVars int) *Regressor {
 	vecIntercept := mat.NewVecDense(nVars, intercept)
 	newCoeffs := mat.NewDense(nVars, len(coeffs)/nVars, coeffs)
 	return &Regressor{newCoeffs, vecIntercept}

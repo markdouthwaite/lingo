@@ -37,3 +37,12 @@ func Argmax(a mat.Vector) (int, int) {
 	}
 	return maxI, maxJ
 }
+
+func Load(filename string) LinearModel {
+	model := Regressor{nil, nil}
+	return &model
+}
+
+func Dump(filename string, model *LinearModel) {
+
+}

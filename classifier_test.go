@@ -33,7 +33,7 @@ func setupSimpleClassifier() *Classifier {
 		10.899661932611561, 12.098504529808563,
 	}
 	intercept := []float64{2.15291448, 20.21934658, -22.37226107}
-	return CreateClassifier(coeffs, intercept, 3)
+	return NewClassifier(coeffs, intercept, 3)
 }
 
 func TestSimpleClassifier_Predict(t *testing.T) {

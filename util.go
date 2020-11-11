@@ -7,10 +7,11 @@ import (
 )
 
 const (
+	// ErrorThreshold is used in tests as the default error expected between predicted and expected values.
 	ErrorThreshold = 0.00001
 )
 
-// Convert a vector into an array of floats.
+// VecToArrayFloat64 converts a vector into an array of floats.
 func VecToArrayFloat64(v mat.Vector) []float64 {
 	r, _ := v.Dims()
 	o := make([]float64, r)
@@ -20,7 +21,7 @@ func VecToArrayFloat64(v mat.Vector) []float64 {
 	return o
 }
 
-// Get the i, j associated with the largest value in a dense matrix.
+// Argmax gets the i, j associated with the largest value in a dense matrix.
 func Argmax(a mat.Vector) (int, int) {
 	r, c := a.Dims()
 	maxVal := math.Inf(-1)
@@ -39,7 +40,8 @@ func Argmax(a mat.Vector) (int, int) {
 	return maxI, maxJ
 }
 
-func loadParams(dataset *hdf5.Dataset) ([]float64, int, int) {
+// loadArray loads a 1D float array from a HDF5 dataset.
+func loadArray(dataset *hdf5.Dataset) ([]float64, int, int) {
 	rows, cols := 0, 0
 	rowsAttr, err := dataset.OpenAttribute("n")
 
@@ -72,6 +74,7 @@ func loadParams(dataset *hdf5.Dataset) ([]float64, int, int) {
 	return params, rows, cols
 }
 
+// Load loads a linear model from a HDF5 file.
 func Load(fileName string) LinearModel {
 
 	var modelType string
@@ -113,8 +116,8 @@ func Load(fileName string) LinearModel {
 		panic("Failed to open dataset 'theta'.")
 	}
 
-	theta, _, nVars := loadParams(thetaDataset)
-	intercept, _, _ := loadParams(interceptDataset)
+	theta, _, nVars := loadArray(thetaDataset)
+	intercept, _, _ := loadArray(interceptDataset)
 
 	if modelType == "regressor" {
 		model := NewRegressor(theta, intercept, nVars)

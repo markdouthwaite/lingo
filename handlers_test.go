@@ -8,36 +8,10 @@ import (
 	"testing"
 )
 
-func TestModelHandler_Health(t *testing.T) {
-
-	app := HTTPModelApplication{nil}
-
-	req, err := http.NewRequest("GET", "/health", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(app.Health)
-	handler.ServeHTTP(rr, req)
-
-	// Check the status code is what we expect.
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-	// Check the response body is what we expect.
-	expected := `{"alive": true}`
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			rr.Body.String(), expected)
-	}
-}
-
 func TestModelEndpoint_RegressionQuery(t *testing.T) {
 	var response ModelResponse
 
 	model := setupSimpleRegressor()
-	server := HTTPModelApplication{model}
 
 	data := `{"features": [5.0, 296.0, 16.6, 395.5, 9.04]}`
 	body := strings.NewReader(data)
@@ -47,7 +21,7 @@ func TestModelEndpoint_RegressionQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(server.Predict)
+	handler := NewModelHandler(model)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {

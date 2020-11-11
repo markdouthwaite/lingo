@@ -2,7 +2,6 @@ package lingo
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 )
 
@@ -14,46 +13,26 @@ type ModelResponse struct {
 	Response []float64 `json:"response"`
 }
 
-type HTTPHealthChecker interface {
-	Health(http.ResponseWriter, *http.Request)
-}
+func NewModelHandler(model LinearModel) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var query ModelQuery
+		err := json.NewDecoder(r.Body).Decode(&query)
 
-type HTTPPredictor interface {
-	Predict(http.ResponseWriter, *http.Request)
-}
+		if err != nil {
+			panic("Failed to decode payload.")
+		}
 
-type HTTPModelApplication struct {
-	Model LinearModel
-}
+		output := model.Predict(query.Features)
 
-func (a *HTTPModelApplication) Health(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	_, err := io.WriteString(w, `{"alive": true}`)
+		response := ModelResponse{output}
 
-	if err != nil {
-		panic("Failed to respond.")
-	}
-}
+		err = json.NewEncoder(w).Encode(&response)
 
-func (a *HTTPModelApplication) Predict(w http.ResponseWriter, r *http.Request) {
-	var query ModelQuery
-	err := json.NewDecoder(r.Body).Decode(&query)
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
 
-	if err != nil {
-		panic("Failed to decode payload.")
-	}
-
-	output := a.Model.Predict(query.Features)
-
-	response := ModelResponse{output}
-
-	err = json.NewEncoder(w).Encode(&response)
-
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-
-	if err != nil {
-		panic("Failed to encode response.")
+		if err != nil {
+			panic("Failed to encode response.")
+		}
 	}
 }

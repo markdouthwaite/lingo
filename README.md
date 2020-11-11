@@ -13,12 +13,11 @@ import (
 	"log"
 )
 
+
 func main(){
     model := lingo.Load("artifacts/model.h5")
-    app := lingo.HTTPModelApplication{model}
     router := mux.NewRouter()
-    router.HandleFunc("/predict", app.Predict)
-    router.HandleFunc("/health", app.Health)
+    router.HandleFunc("/predict", NewModelHandler(model))
 
 	server := &http.Server{
 		Handler:      router,

@@ -79,13 +79,11 @@ func loadArray(dataset *hdf5.Dataset) ([]float64, int, int) {
 }
 
 // Load loads a linear model from a HDF5 file.
-func Load(fileName string) Model {
-
-	var modelType string
+func Load(fileName string) (modelType string, model *LinearModel) {
 
 	file, err := hdf5.OpenFile(fileName, hdf5.F_ACC_RDONLY)
 	if err != nil {
-		panic(err)
+		panic("Failed to open target HDF5 file: " + fileName)
 	}
 
 	defer file.Close()
@@ -123,13 +121,20 @@ func Load(fileName string) Model {
 	theta, _, nVars := loadArray(thetaDataset)
 	intercept, _, _ := loadArray(interceptDataset)
 
-	if modelType == "regressor" {
-		model := NewLinearRegressor(theta, intercept, nVars)
-		return model
-	} else if modelType == "classifier" {
-		model := NewLinearClassifier(theta, intercept, nVars)
-		return model
-	} else {
-		panic("Failed to initialise new model of type " + modelType)
+	model = NewLinearModel(theta, intercept, nVars)
+
+	return
+
+}
+
+func LoadClassifier(fileName string) (model *LinearClassifier) {
+	modelType, coreModel := Load(fileName)
+
+	if modelType != "classifier" {
+		panic("Expected model of type 'classifier', got: " + modelType)
 	}
+
+	model = &LinearClassifier{coreModel}
+
+	return
 }

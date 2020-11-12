@@ -31,3 +31,5 @@ func main(){
 
 }
 ```
+
+Tailored to run inference on individual feature vectors (i.e. single observations).

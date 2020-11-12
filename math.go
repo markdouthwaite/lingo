@@ -14,3 +14,13 @@ func Softmax(x *mat.Dense) *mat.Dense {
 	x.Scale(1/total, x)
 	return x
 }
+
+// LinearDecisionFunction computes the decision function over the provided model and feature/s.
+func LinearDecisionFunction(x *mat.Dense, coef *mat.Dense, intercept *mat.VecDense) *mat.Dense {
+	ar, _ := x.Dims()
+	br, _ := coef.Dims()
+	H := mat.NewDense(ar, br, nil)
+	H.Product(x, coef.T())
+	H.Apply(func(i, j int, v float64) float64 { return v + intercept.AtVec(j) }, H)
+	return H
+}

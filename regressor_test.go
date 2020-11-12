@@ -31,21 +31,21 @@ func bostonH() []float64 {
 }
 
 func setupSimpleRegressor() *LinearRegressor {
-	theta := []float64{0.3574458, -0.01453134, -1.2603342, 0.00891642, -0.79181815}
-	intercept := []float64{55.15045304131303}
-	return NewLinearRegressor(theta, intercept, 1)
+	Coef := []float64{0.3574458, -0.01453134, -1.2603342, 0.00891642, -0.79181815}
+	Intercept := []float64{55.15045304131303}
+	return NewLinearRegressor(Coef, Intercept, 1)
 }
 
 func setupMinimalMultivariateRegressor() *LinearRegressor {
-	theta := []float64{
+	Coef := []float64{
 		0.3574458, -0.01453134,
 		-1.2603342, 0.00891642,
 		-0.79181815, 0.3574458,
 		-0.01453134, -1.2603342,
 		0.00891642, -0.79181815,
 	}
-	intercept := []float64{55.15045304131303, 55.15045304131303}
-	return NewLinearRegressor(theta, intercept, 2)
+	Intercept := []float64{55.15045304131303, 55.15045304131303}
+	return NewLinearRegressor(Coef, Intercept, 2)
 }
 
 func TestSimpleRegressor_Predict(t *testing.T) {
@@ -53,7 +53,12 @@ func TestSimpleRegressor_Predict(t *testing.T) {
 	h := bostonH()
 	model := setupSimpleRegressor()
 	for i := 0; i < len(h); i++ {
-		o := model.Predict(x[i])
+		o, err := model.Predict(x[i])
+
+		if err != nil {
+			t.Errorf("Failed to complete LinearRegressor.Predict call: %s", err)
+		}
+
 		if math.Abs(o[0]-h[i]) > ErrorThreshold {
 			t.Errorf("Failed to return correct univariate response.")
 		}
@@ -63,7 +68,12 @@ func TestSimpleRegressor_Predict(t *testing.T) {
 func TestMinimalMultivariateLinearRegression_Predict(t *testing.T) {
 	x := []float64{1., 296., 15.3, 396.9, 4.98}
 	model := setupMinimalMultivariateRegressor()
-	o := model.Predict(x)
+	o, err := model.Predict(x)
+
+	if err != nil {
+		t.Errorf("Failed to complete LinearRegressor.Predict call: %s", err)
+	}
+
 	if ((o[0] - 31.519181652313026) > ErrorThreshold) || ((o[1] - 31.519181652313026) > ErrorThreshold) {
 		t.Errorf("Failed to return correct multivariate response.")
 	}

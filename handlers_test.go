@@ -9,7 +9,7 @@ import (
 )
 
 func TestModelEndpoint_RegressionQuery(t *testing.T) {
-	var response ModelResponse
+	var response RegressorResponse
 
 	model := setupSimpleRegressor()
 
@@ -21,7 +21,7 @@ func TestModelEndpoint_RegressionQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 	rr := httptest.NewRecorder()
-	handler := NewModelHandler(model)
+	handler := NewRegressorHandler(model)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {

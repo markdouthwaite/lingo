@@ -43,15 +43,3 @@ func (m *LinearClassifier) Predict(x []float64) (c []int, err error) {
 
 	return
 }
-
-//
-//// Predict the probability of classes for a single observation
-//func (m *LinearClassifier) Predict(x []float64) []float64 {
-//	vx := mat.NewDense(1, len(x), x)
-//	H := LinearDecisionFunction(vx, m.Theta, m.Intercept)
-//	n, _ := m.Theta.Dims()
-//	c, _ := Argmax(H.RowView(0))
-//	h := make([]float64, n)
-//	h[c] = 1.0
-//	return h
-//}

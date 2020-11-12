@@ -50,25 +50,25 @@ func loadArray(dataset *hdf5.Dataset) ([]float64, int, int) {
 	rowsAttr, err := dataset.OpenAttribute("n")
 
 	if err != nil {
-		panic("Failed to open attribute 'n'.")
+		panic("failed to open attribute 'n'")
 	}
 
 	colsAttr, err := dataset.OpenAttribute("m")
 
 	if err != nil {
-		panic("Failed to open attribute 'n'.")
+		panic("failed to open attribute 'n'")
 	}
 
 	err = colsAttr.Read(&rows, hdf5.T_NATIVE_UINT32)
 
 	if err != nil {
-		panic("Failed to read 'rows'.")
+		panic("failed to read 'rows'")
 	}
 
 	err = rowsAttr.Read(&cols, hdf5.T_NATIVE_UINT32)
 
 	if err != nil {
-		panic("Failed to read 'cols'.")
+		panic("failed to read 'cols'")
 	}
 
 	params := make([]float64, rows*cols)
@@ -91,13 +91,13 @@ func Load(fileName string) (modelType string, model *LinearModel) {
 	modelGroup, err := file.OpenGroup("model")
 
 	if err != nil {
-		panic("Failed to open group 'model'.")
+		panic("failed to open group 'model'")
 	}
 
 	modelTypeAttr, err := modelGroup.OpenAttribute("estimatorType")
 
 	if err != nil {
-		panic("Failed to open attribute 'estimatorType'")
+		panic("failed to open attribute 'estimatorType'")
 	}
 
 	modelTypeAttr.Read(&modelType, hdf5.T_GO_STRING)
@@ -107,7 +107,7 @@ func Load(fileName string) (modelType string, model *LinearModel) {
 	defer thetaDataset.Close()
 
 	if err != nil {
-		panic("Failed to open dataset 'theta'.")
+		panic("failed to open dataset 'theta'")
 	}
 
 	interceptDataset, err := modelGroup.OpenDataset("intercept")
@@ -115,7 +115,7 @@ func Load(fileName string) (modelType string, model *LinearModel) {
 	defer interceptDataset.Close()
 
 	if err != nil {
-		panic("Failed to open dataset 'intercept'.")
+		panic("failed to open dataset 'intercept'")
 	}
 
 	theta, _, nVars := loadArray(thetaDataset)
@@ -131,7 +131,7 @@ func LoadClassifier(fileName string) (model *LinearClassifier) {
 	modelType, coreModel := Load(fileName)
 
 	if modelType != "classifier" {
-		panic("Expected model of type 'classifier', got: " + modelType)
+		panic("expected model of type 'classifier', got: " + modelType)
 	}
 
 	model = &LinearClassifier{coreModel}

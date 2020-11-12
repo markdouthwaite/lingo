@@ -46,11 +46,11 @@ func TestSimpleClassifier_Predict(t *testing.T) {
 		o, err := model.Predict(x[i])
 
 		if err != nil {
-			t.Errorf("Failed to complete LinearClassifier.Predict call: %s", err)
+			t.Errorf("failed to complete LinearClassifier.Predict call: %s", err)
 		}
 
 		if o[0] != y[i] {
-			t.Errorf("Failed to return correct univariate classifier response.")
+			t.Errorf("failed to return correct univariate classifier response.")
 		}
 	}
 }

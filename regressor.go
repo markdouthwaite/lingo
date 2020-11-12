@@ -4,7 +4,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// Create a new Linear Regression model
+// NewLinearRegressor creates a new Linear Regression model.
 func NewLinearRegressor(theta []float64, intercept []float64, nVars int) *LinearRegressor {
 	Intercept := mat.NewVecDense(nVars, intercept)
 	Coef := mat.NewDense(nVars, len(theta)/nVars, theta)

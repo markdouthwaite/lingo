@@ -41,17 +41,26 @@ func (m *LinearModel) Validate(x []float64) error {
 	n := m.nFeatures()
 
 	if len(x) != n {
-		return fmt.Errorf("Invalid feature vector: expected length %d, got %d.", len(x), n)
+		return fmt.Errorf("invalid feature vector: expected length %d, got %d", len(x), n)
 	}
 
 	return nil
 }
 
-func (m *LinearModel) DecisionFunction(x []float64) (*mat.Dense, error) {
-	err := m.Validate(x)
+func (m *LinearModel) DecisionFunction(x []float64) (h *mat.Dense, err error) {
+
+	defer func() {
+		if err := recover(); err != nil {
+			err = fmt.Errorf("failed to execute decision function")
+		}
+	}()
+
+	err = m.Validate(x)
+
 	features := mat.NewDense(1, len(x), x)
-	h := LinearDecisionFunction(features, m.Coef, m.Intercept)
-	return h, err
+	h = LinearDecisionFunction(features, m.Coef, m.Intercept)
+
+	return
 }
 
 func NewLinearModel(coef []float64, intercept []float64, nVars int) *LinearModel {

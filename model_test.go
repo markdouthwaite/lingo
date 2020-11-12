@@ -18,13 +18,13 @@ func TestLinearModel_Validate(t *testing.T) {
 	err := model.Validate(x[0])
 
 	if err != nil {
-		t.Errorf("Failed to validate properly formatted input vector.")
+		t.Errorf("failed to validate properly formatted input vector")
 	}
 
 	err = model.Validate(x[0][:4])
 
 	if err == nil {
-		t.Errorf("Failed to raise an error on an invalid input vector.")
+		t.Errorf("failed to raise an error on an invalid input vector")
 	}
 }
 
@@ -34,10 +34,10 @@ func TestDecisionFunction(t *testing.T) {
 	h, err := model.DecisionFunction(x[0])
 
 	if err != nil {
-		t.Errorf("DecisionFunction call failed: got error %s", err)
+		t.Errorf("decisionFunction call failed: got error %s", err)
 	}
 
 	if math.Abs(h.At(0, 0)-28.08326571531303) > ErrorThreshold {
-		t.Errorf("DecisionFunction call failed: response exceeds required threshold.")
+		t.Errorf("decisionFunction call failed: response exceeds required threshold")
 	}
 }

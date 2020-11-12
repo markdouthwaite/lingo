@@ -43,22 +43,21 @@ import (
 )
 
 
-func main(){
+func main(){    
     model := lingo.LoadRegressor("artifacts/boston.h5")
     handler := lingo.NewRegressorHandler(model)
-
+    
     router := mux.NewRouter()
     router.HandleFunc("/predict", handler)
-
-	server := &http.Server{
+    server := &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8000",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-
-	log.Fatal(server.ListenAndServe())
+	
+    log.Fatal(server.ListenAndServe())
 
 }
 ```

@@ -83,7 +83,7 @@ func Load(fileName string) (modelType string, model *LinearModel) {
 
 	file, err := hdf5.OpenFile(fileName, hdf5.F_ACC_RDONLY)
 	if err != nil {
-		panic("Failed to open target HDF5 file: " + fileName)
+		panic("failed to open target HDF5 file: " + fileName)
 	}
 
 	defer file.Close()

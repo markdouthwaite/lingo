@@ -138,3 +138,15 @@ func LoadClassifier(fileName string) (model *LinearClassifier) {
 
 	return
 }
+
+func LoadRegressor(fileName string) (model *LinearRegressor) {
+	modelType, coreModel := Load(fileName)
+
+	if modelType != "regressor" {
+		panic("expected model of type 'regressor', got: " + modelType)
+	}
+
+	model = &LinearRegressor{coreModel}
+
+	return
+}

@@ -30,13 +30,13 @@ func bostonH() []float64 {
 	}
 }
 
-func setupSimpleRegressor() *Regressor {
+func setupSimpleRegressor() *LinearRegressor {
 	theta := []float64{0.3574458, -0.01453134, -1.2603342, 0.00891642, -0.79181815}
 	intercept := []float64{55.15045304131303}
-	return NewRegressor(theta, intercept, 1)
+	return NewLinearRegressor(theta, intercept, 1)
 }
 
-func setupMinimalMultivariateRegressor() *Regressor {
+func setupMinimalMultivariateRegressor() *LinearRegressor {
 	theta := []float64{
 		0.3574458, -0.01453134,
 		-1.2603342, 0.00891642,
@@ -45,7 +45,7 @@ func setupMinimalMultivariateRegressor() *Regressor {
 		0.00891642, -0.79181815,
 	}
 	intercept := []float64{55.15045304131303, 55.15045304131303}
-	return NewRegressor(theta, intercept, 2)
+	return NewLinearRegressor(theta, intercept, 2)
 }
 
 func TestSimpleRegressor_Predict(t *testing.T) {

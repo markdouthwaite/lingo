@@ -15,7 +15,7 @@ import (
 
 
 func main(){
-    model := lingo.Load("artifacts/model.h5")
+    model := lingo.Load("artifacts/simple.h5")
     router := mux.NewRouter()
     router.HandleFunc("/predict", NewModelHandler(model))
 

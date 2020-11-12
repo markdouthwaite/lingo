@@ -5,22 +5,21 @@ import (
 )
 
 // Create a new Linear Regression model
-func NewRegressor(theta []float64, intercept []float64, nVars int) *Regressor {
-
+func NewLinearRegressor(theta []float64, intercept []float64, nVars int) *LinearRegressor {
 	vecIntercept := mat.NewVecDense(nVars, intercept)
 	newTheta := mat.NewDense(nVars, len(theta)/nVars, theta)
-	return &Regressor{newTheta, vecIntercept}
+	return &LinearRegressor{newTheta, vecIntercept}
 }
 
-// Linear regression model struct
-type Regressor struct {
-	theta     *mat.Dense
-	intercept *mat.VecDense
+// LinearRegressor
+type LinearRegressor struct {
+	Theta     *mat.Dense
+	Intercept *mat.VecDense
 }
 
-// Predict the response for a single observation
-func (m *Regressor) Predict(x []float64) []float64 {
+// Predict runs inference for a single observation
+func (m *LinearRegressor) Predict(x []float64) []float64 {
 	vx := mat.NewDense(1, len(x), x)
-	H := DecisionFunction(vx, m.theta, m.intercept)
+	H := DecisionFunction(vx, m.Theta, m.Intercept)
 	return VecToArrayFloat64(H.RowView(0))
 }

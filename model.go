@@ -1,19 +1,22 @@
 package lingo
 
-import "gonum.org/v1/gonum/mat"
+import (
+	"gonum.org/v1/gonum/mat"
+)
 
-type LinearModel interface {
+type Model interface {
 	Predict([]float64) []float64
 }
 
-type LinearProbabilisticClassifier interface {
+type ProbabilisticClassifier interface {
 	PredictProba([]float64) []float64
 }
 
-type LinearClassifier interface {
+type Classifier interface {
 	PredictClass([]float64) []int
 }
 
+// DecisionFunction computes the decision function over the provided model and observation/s.
 func DecisionFunction(x *mat.Dense, theta *mat.Dense, intercept *mat.VecDense) *mat.Dense {
 	ar, _ := x.Dims()
 	br, _ := theta.Dims()

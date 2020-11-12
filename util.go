@@ -11,6 +11,10 @@ const (
 	ErrorThreshold = 0.00001
 )
 
+type Validator interface {
+	validate(x []float64) error
+}
+
 // VecToArrayFloat64 converts a vector into an array of floats.
 func VecToArrayFloat64(v mat.Vector) []float64 {
 	r, _ := v.Dims()
@@ -75,7 +79,7 @@ func loadArray(dataset *hdf5.Dataset) ([]float64, int, int) {
 }
 
 // Load loads a linear model from a HDF5 file.
-func Load(fileName string) LinearModel {
+func Load(fileName string) Model {
 
 	var modelType string
 
@@ -113,17 +117,17 @@ func Load(fileName string) LinearModel {
 	defer interceptDataset.Close()
 
 	if err != nil {
-		panic("Failed to open dataset 'theta'.")
+		panic("Failed to open dataset 'intercept'.")
 	}
 
 	theta, _, nVars := loadArray(thetaDataset)
 	intercept, _, _ := loadArray(interceptDataset)
 
 	if modelType == "regressor" {
-		model := NewRegressor(theta, intercept, nVars)
+		model := NewLinearRegressor(theta, intercept, nVars)
 		return model
 	} else if modelType == "classifier" {
-		model := NewClassifier(theta, intercept, nVars)
+		model := NewLinearClassifier(theta, intercept, nVars)
 		return model
 	} else {
 		panic("Failed to initialise new model of type " + modelType)

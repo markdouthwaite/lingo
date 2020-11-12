@@ -20,6 +20,9 @@ a concept that can easily be applied to other model variants too** -- and not ju
 
 ## Quickstart
 
+Before you begin, you'll need to save your Scikit-Learn model with the [`py-lingo` Python package](https://pypi.org/project/py-lingo/). When you've got that
+saved, you can move to deploy your model...
+
 If you're familiar with the setting up servers in Go, then this should all feel familiar. All you need to do is:
 
 1. Load either your `LinearClassifier` or `LinearRegressor` model with `LoadClassifier` or `LoadRegressor` functions respectively.
@@ -61,7 +64,6 @@ func main(){
 ```
 
 Tailored to run inference on individual feature vectors (i.e. single observations).
-
 
 ## Bundled models
 
